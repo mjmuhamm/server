@@ -33,6 +33,7 @@ console.log(req.body.amount);
     paymentIntent: paymentIntent.client_secret,
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
+    paymentId: paymentIntent.id,
     publishableKey: 'pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo'
   });
   console.log(paymentIntent);
@@ -40,6 +41,6 @@ console.log(req.body.amount);
 
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => {
+app.listen(4242, () => {
   console.log("Started server on port 4242.");
 })
