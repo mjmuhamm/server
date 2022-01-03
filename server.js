@@ -130,6 +130,6 @@ console.log(req.body.amount);
 
 const PORT = process.env.PORT || 5000
 
-app.listen(4242, () => {
+app.listen(PORT, () => {
   console.log("Started server on port 4242.");
 })
