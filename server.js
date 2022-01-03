@@ -9,6 +9,95 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
+app.post('/refund', async (req,res) => {
+  const refund = await stripe.refunds.create({
+  charge: req.body.paymentId,
+  amount: req.body.amount
+});
+
+res.json({
+  refundId: refund.id
+});
+});
+
+
+app.post('/transfer', async (req,res) => {
+  const transfer = await stripe.transfers.create({
+  amount: req.body.amount,
+  currency: 'usd',
+  destination: req.body.stripeAccountId,
+});
+console.log(transfer);
+});
+
+
+app.post('/retrieve-person', async (req,res) => {
+  const person = await stripe.accounts.retrievePerson(
+    req.body.stripeAccountId,
+    req.body.personId
+  );
+
+  res.json({
+    first_name: person.first_name,
+    last_name: person.last_name,
+    email: person.email,
+    phone_number: person.phone,
+    dob_day: person.dob.day,
+    dob_month: person.dob.month,
+    dob_year: person.dob.year,
+    street_address: person.address.line1,
+    street_address_2: person.address.line2,
+    city: person.address.city,
+    state: person.address.state,
+    zip_code: person.address.postal_code
+
+  });
+
+  console.log(person);
+});
+
+
+app.post('/retrieve-business-account', async (req, res) => {
+  const account = await stripe.accounts.retrieve(
+  req.body.stripeAccountId
+  );
+
+  const balance = await stripe.balance.retrieve({
+  stripeAccount: req.body.stripeAccountId
+});
+
+  const bankAccount = await stripe.accounts.retrieveExternalAccount(
+  req.body.stripeAccountId,
+  req.body.externalAccountId
+);
+
+const persons = await stripe.accounts.listPersons(
+  req.body.stripeAccountId
+);
+
+const person = await stripe.accounts.retrievePerson(
+  req.body.stripeAccountId,
+  req.body.representativeId
+);
+
+res.json({
+    card_payments: account.capabilities.card_payments,
+    transfers: account.capabilities.transfers,
+    available: balance.available[0].amount,
+    pending: balance.pending[0].amount,
+    bank_name: bankAccount.bank_name,
+    account_holder: bankAccount.account_holder_name,
+    account_number: bankAccount.last4,
+    routing_number: bankAccount.routing_number,
+    persons: persons.data,
+    representative_first_name: person.first_name,
+    representative_last_name: person.last_name
+
+});
+
+
+});
+
 
 app.post('/create-payment-intent', async (req, res) => {
   // Use an existing Customer ID if this is a returning customer.
