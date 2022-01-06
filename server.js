@@ -8,17 +8,24 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+stripe.balance.retrieve(function(err, balance) {
+  console.log(balance);
+});
 
 app.post('/refund', async (req,res) => {
   const refund = await stripe.refunds.create({
-  charge: req.body.paymentId,
+  payment_intent: req.body.paymentId,
   amount: req.body.amount
 });
 
 res.json({
-  refundId: refund.id
+  tranfer_id: refund.id
+})
+
+console.log(refund);
 });
-});
+
+
 
 
 app.post('/transfer', async (req,res) => {
@@ -26,6 +33,10 @@ app.post('/transfer', async (req,res) => {
   amount: req.body.amount,
   currency: 'usd',
   destination: req.body.stripeAccountId,
+});
+
+res.json({
+  transferId: transfer.id
 });
 console.log(transfer);
 });
@@ -128,7 +139,7 @@ console.log(req.body.amount);
   console.log(paymentIntent);
 });
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 4242
 
 app.listen(PORT, () => {
   console.log("Started server on port 4242.");
