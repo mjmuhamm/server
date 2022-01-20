@@ -158,7 +158,7 @@ relationship: {
   title: req.body.representative_title,
   representative: req.body.representative,
   owner: req.body.representative_owner,
-  executive: req.body.representative_owner,
+  executive: req.body.representative_executive,
 }
 });
 
