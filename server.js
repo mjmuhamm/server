@@ -296,7 +296,7 @@ res.json({
     company_line2: account.company.address.line2,
     company_city: account.company.address.city,
     company_state: account.company.address.state,
-    company_postal_code: account.company.postal_code,
+    company_postal_code: account.company.address.postal_code,
     phone: account.company.phone,
 
 
