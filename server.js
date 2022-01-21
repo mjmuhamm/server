@@ -18,9 +18,10 @@ app.post('/refund', async (req,res) => {
 });
 
 res.json({
-  tranfer_id: refund.id
+  refund_id: refund.id
 })
-
+console.log("refund");
+console.log(refund);
 });
 
 
@@ -259,7 +260,7 @@ res.json({
       routing_number: bankAccount.routing_number,
 });
 
-
+console.log(bankAccount);
 });
 
 app.post('/retrieve-business-account', async (req, res) => {
