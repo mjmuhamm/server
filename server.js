@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ');
+const stripe = require('stripe')('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');
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 const express = require('express');
@@ -137,6 +137,20 @@ app.post('/create-business-account', async (req,res) => {
 
 });
 
+const bankAccount = await stripe.accounts.createExternalAccount(
+  account.id, {
+    external_account: {
+    object: 'bank_account',
+    country: 'US',
+    currency: 'usd',
+    account_holder_name: req.body.account_holder,
+    account_holder_type: 'company',
+    routing_number: req.body.routing_number,
+    account_number: req.body.account_number
+  }
+  }
+);
+
 const person = await stripe.accounts.createPerson(
 account.id, {
   first_name: req.body.representative_first_name,
@@ -154,7 +168,7 @@ address: {
 },
 email: req.body.representative_email,
 phone: req.body.representative_phone,
-ssn_last_4: req.body.representative_ssn_last_4,
+id_number: req.body.representative_id_number,
 relationship: {
   title: req.body.representative_title,
   representative: req.body.representative,
@@ -163,20 +177,9 @@ relationship: {
 }
 });
 
-const bankAccount = await stripe.accounts.createExternalAccount(
-  account.id, {
-    external_account: {
-    object: 'bank_account',
-    country: 'US',
-    currency: 'usd',
-    account_holder_name: req.body.account_holder,
-    account_holder_type: 'company',
-    routing_number: req.body.routing_number,
-    account_number: req.body.account_number
-  }
-  }
-);
 
+
+console.log(person);
 res.json({
   stripeId: account.id,
   bankAccountId: bankAccount.id,
@@ -202,7 +205,7 @@ app.post('/save-owner', async (req, res) => {
   },
   email: req.body.owner_email,
   phone: req.body.owner_phone,
-  ssn_last_4: req.body.owner_ssn_last_4,
+  id_number: req.body.owner_id_number,
   relationship: {
     title: req.body.owner_title,
     representative: false,
@@ -258,9 +261,12 @@ res.json({
       account_holder: bankAccount.account_holder_name,
       account_number: bankAccount.last4,
       routing_number: bankAccount.routing_number,
+
+      currently_due: account.requirements.currently_due,
+      eventually_due: account.requirements.eventually_due,
+      current_deadline: account.requirements.current_deadline
 });
 
-console.log(bankAccount);
 });
 
 app.post('/retrieve-business-account', async (req, res) => {
@@ -310,6 +316,10 @@ res.json({
     persons: persons.data,
     representative_first_name: person.first_name,
     representative_last_name: person.last_name,
+
+    currently_due: account.requirements.currently_due,
+    eventually_due: account.requirements.eventually_due,
+    current_deadline: account.requirements.current_deadline
 
 
 });
@@ -494,12 +504,12 @@ app.post('/create-payment-intent', async (req, res) => {
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
     paymentId: paymentIntent.id,
-    publishableKey: 'pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo'
+    publishableKey: 'pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB'
   });
 
 });
 
-const PORT = process.env.PORT || 4242
+const PORT = process.env.PORT || 4243
 
 app.listen(PORT, () => {
   console.log("Started server on port 4242.");
