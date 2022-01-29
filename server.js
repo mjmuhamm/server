@@ -1,6 +1,8 @@
 const stripe = require('stripe')('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');
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
+//sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ
+//
 const express = require('express');
 const app = express();
 app.use(express.urlencoded());
@@ -90,7 +92,8 @@ const bankAccount = await stripe.accounts.createExternalAccount(
     account_holder_name: req.body.account_holder,
     account_holder_type: 'individual',
     routing_number: req.body.routing_number,
-    account_number: req.body.account_number
+    account_number: req.body.account_number,
+    default_for_currency: req.body.default_account
   }
 });
 
@@ -146,7 +149,8 @@ const bankAccount = await stripe.accounts.createExternalAccount(
     account_holder_name: req.body.account_holder,
     account_holder_type: 'company',
     routing_number: req.body.routing_number,
-    account_number: req.body.account_number
+    account_number: req.body.account_number,
+    default_for_currency: req.body.default_account
   }
   }
 );
@@ -190,32 +194,33 @@ res.json({
 app.post('/save-owner', async (req, res) => {
   const person = await stripe.accounts.createPerson(
   req.body.account_id, {
-    first_name: req.body.owner_first_name,
-  last_name: req.body.owner_last_name,
+    first_name: req.body.first_name,
+  last_name: req.body.last_name,
   dob: {
-    day: req.body.owner_dob_day,
-    month: req.body.owner_dob_month,
-    year: req.body.owner_dob_year
+    day: req.body.dob_day,
+    month: req.body.dob_month,
+    year: req.body.dob_year
   },
   address: {
-    line1: req.body.owner_line_1,
-    postal_code: req.body.owner_postal_code,
-    city: req.body.owner_city,
-    state: req.body.owner_state,
+    line1: req.body.line_1,
+    postal_code: req.body.postal_code,
+    city: req.body.city,
+    state: req.body.state,
   },
-  email: req.body.owner_email,
-  phone: req.body.owner_phone,
-  id_number: req.body.owner_id_number,
+  email: req.body.email,
+  phone: req.body.phone,
+  id_number: req.body.id_number,
   relationship: {
-    title: req.body.owner_title,
-    representative: false,
-    owner: true,
-    executive: false,
+    title: req.body.title,
+    representative: req.body.representative,
+    owner: req.body.owner,
+    executive: req.body.executive,
   }
   }
   );
   res.json({
-    all_good: "good"
+    all_good: "good",
+    id: person.id
   });
 
 });
@@ -230,10 +235,6 @@ const balance = await stripe.balance.retrieve({
 stripeAccount: req.body.stripeAccountId
 });
 
-const bankAccount = await stripe.accounts.retrieveExternalAccount(
-req.body.stripeAccountId,
-req.body.externalAccountId
-);
 
 res.json({
       card_payments: account.capabilities.card_payments,
@@ -257,11 +258,6 @@ res.json({
       available: balance.available[0].amount,
       pending: balance.pending[0].amount,
 
-      bank_name: bankAccount.bank_name,
-      account_holder: bankAccount.account_holder_name,
-      account_number: bankAccount.last4,
-      routing_number: bankAccount.routing_number,
-
       currently_due: account.requirements.currently_due,
       eventually_due: account.requirements.eventually_due,
       current_deadline: account.requirements.current_deadline
@@ -270,6 +266,7 @@ res.json({
 });
 
 app.post('/retrieve-business-account', async (req, res) => {
+
   const account = await stripe.accounts.retrieve(
   req.body.stripeAccountId
   );
@@ -278,19 +275,10 @@ app.post('/retrieve-business-account', async (req, res) => {
   stripeAccount: req.body.stripeAccountId
 });
 
-  const bankAccount = await stripe.accounts.retrieveExternalAccount(
-  req.body.stripeAccountId,
-  req.body.externalAccountId
-);
-
 const persons = await stripe.accounts.listPersons(
   req.body.stripeAccountId
 );
 
-const person = await stripe.accounts.retrievePerson(
-  req.body.stripeAccountId,
-  req.body.representativeId
-);
 
 res.json({
     card_payments: account.capabilities.card_payments,
@@ -309,13 +297,9 @@ res.json({
 
     available: balance.available[0].amount,
     pending: balance.pending[0].amount,
-    bank_name: bankAccount.bank_name,
-    account_holder: bankAccount.account_holder_name,
-    account_number: bankAccount.last4,
-    routing_number: bankAccount.routing_number,
     persons: persons.data,
-    representative_first_name: person.first_name,
-    representative_last_name: person.last_name,
+
+
 
     currently_due: account.requirements.currently_due,
     eventually_due: account.requirements.eventually_due,
@@ -323,8 +307,12 @@ res.json({
 
 
 });
-
+console.log('------account-----');
+console.log(account);
+console.log('------persons-----');
+console.log(persons);
 });
+
 
 app.post('/retrieve-person', async (req,res) => {
   const person = await stripe.accounts.retrievePerson(
@@ -408,6 +396,22 @@ app.post('/update-business-account', async (req, res) => {
 );
 });
 
+app.post('/retrieve-external-account', async(req, res) => {
+  const bankAccount = await stripe.accounts.retrieveExternalAccount(
+    req.body.stripeAccountId,
+    req.body.externalAccountId
+  );
+
+  res.json({
+    bank_name: bankAccount.bank_name,
+    account_holder: bankAccount.account_holder_name,
+    routing_number: bankAccount.routing_number,
+    account_number: bankAccount.last4,
+    default_for_currency: bankAccount.default_for_currency
+  });
+  console.log(bankAccount);
+});
+
 app.post('/delete-bank-account', async (req, res) => {
   const deleted = await stripe.accounts.deleteExternalAccount(
   req.body.stripeAccountId,
@@ -427,14 +431,29 @@ app.post('/create-bank-account', async (req,res) => {
     currency: 'usd',
     account_holder_name: req.body.account_holder,
     account_holder_type: req.body.account_type,
-    routing_number: '110000000',
-    account_number: '000123456789'
+    routing_number: req.body.routing_number,
+    account_number: req.body.account_number,
+    default_for_currency: req.body.default_account
   }
 });
 res.json({
   externalAccount: bankAccount.id
 });
 });
+
+app.post('/update-bank-account', async (req, res) => {
+  const bankAccount = await stripe.accounts.updateExternalAccount(
+  req.body.stripeAccountId,
+  req.body.externalAccountId, {
+    default_for_currency: req.body.default_account
+  }
+)
+
+res.json({
+  all_good: "good"
+});
+});
+
 
 app.post('/update-person', async (req,res) => {
   const person = await stripe.accounts.updatePerson(
@@ -482,6 +501,8 @@ res.json({
 
 
 
+
+
 app.post('/create-payment-intent', async (req, res) => {
   // Use an existing Customer ID if this is a returning customer.
 
@@ -506,6 +527,8 @@ app.post('/create-payment-intent', async (req, res) => {
     paymentId: paymentIntent.id,
     publishableKey: 'pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB'
   });
+// pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
+// pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
 
 });
 
