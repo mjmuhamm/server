@@ -1,8 +1,8 @@
-const stripe = require('stripe')('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');
+const stripe = require('stripe')('sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ');
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 //sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ
-//
+//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
 const express = require('express');
 const app = express();
 app.use(express.urlencoded());
@@ -78,7 +78,7 @@ app.post('/create-individual-account', async (req,res) => {
     },
     email: req.body.email,
     phone: req.body.phone,
-    ssn_last_4: req.body.ssn_last_4
+    id_number: req.body.ssn
   }
 
 });
@@ -409,7 +409,6 @@ app.post('/retrieve-external-account', async(req, res) => {
     account_number: bankAccount.last4,
     default_for_currency: bankAccount.default_for_currency
   });
-  console.log(bankAccount);
 });
 
 app.post('/delete-bank-account', async (req, res) => {
@@ -525,14 +524,14 @@ app.post('/create-payment-intent', async (req, res) => {
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
     paymentId: paymentIntent.id,
-    publishableKey: 'pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB'
+    publishableKey: 'pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo'
   });
 // pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
 // pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
 
 });
 
-const PORT = process.env.PORT || 4243
+const PORT = process.env.PORT || 4242
 
 app.listen(PORT, () => {
   console.log("Started server on port 4242.");
