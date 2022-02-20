@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ');
+const stripe = require('stripe')('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');
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 //sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ
@@ -166,6 +166,7 @@ dob: {
 },
 address: {
   line1: req.body.representative_line_1,
+  line2: req.body.representative_line_2,
   postal_code: req.body.representative_postal_code,
   city: req.body.representative_city,
   state: req.body.representative_state,
@@ -191,7 +192,7 @@ res.json({
 });
 });
 
-app.post('/save-owner', async (req, res) => {
+app.post('/create-person', async (req, res) => {
   const person = await stripe.accounts.createPerson(
   req.body.account_id, {
     first_name: req.body.first_name,
@@ -203,6 +204,7 @@ app.post('/save-owner', async (req, res) => {
   },
   address: {
     line1: req.body.line_1,
+    line2: req.body.line_2,
     postal_code: req.body.postal_code,
     city: req.body.city,
     state: req.body.state,
@@ -364,7 +366,7 @@ app.post('/update-individual-account', async (req,res) => {
       },
       email: req.body.email,
       phone: req.body.phone,
-      ssn_last_4: req.body.ssn_last_4
+      id_number: req.body.ssn
     }
   }
 );
@@ -409,6 +411,15 @@ app.post('/retrieve-external-account', async(req, res) => {
     account_number: bankAccount.last4,
     default_for_currency: bankAccount.default_for_currency
   });
+});
+
+app.post('/delete-account', async (req,res) => {
+  const deleted = await stripe.accounts.del(
+  req.body.stripeAccountId,
+);
+res.json({
+  all_good: "good"
+});
 });
 
 app.post('/delete-bank-account', async (req, res) => {
@@ -474,7 +485,6 @@ app.post('/update-person', async (req,res) => {
   },
   email: req.body.email,
   phone: req.body.phone,
-  ssn_last_4: req.body.ssn_last_4,
   relationship: {
     title: req.body.title,
     representative: req.body.representative,
@@ -524,9 +534,9 @@ app.post('/create-payment-intent', async (req, res) => {
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
     paymentId: paymentIntent.id,
-    publishableKey: 'pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo'
+    publishableKey: 'pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB'
   });
-// pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
+
 // pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
 
 });
