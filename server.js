@@ -147,10 +147,10 @@ const bankAccount = await stripe.accounts.createExternalAccount(
     country: 'US',
     currency: 'usd',
     account_holder_name: req.body.account_holder,
-    account_holder_type: 'company',
+    account_holder_type: req.body.account_holder_type,
     routing_number: req.body.routing_number,
     account_number: req.body.account_number,
-    default_for_currency: req.body.default_account
+    default_for_currency: "Yes"
   }
   }
 );
@@ -443,7 +443,7 @@ app.post('/create-bank-account', async (req,res) => {
     account_holder_type: req.body.account_type,
     routing_number: req.body.routing_number,
     account_number: req.body.account_number,
-    default_for_currency: req.body.default_account
+    default_for_currency: "Yes"
   }
 });
 res.json({
