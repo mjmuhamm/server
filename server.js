@@ -93,7 +93,7 @@ const bankAccount = await stripe.accounts.createExternalAccount(
     account_holder_type: 'individual',
     routing_number: req.body.routing_number,
     account_number: req.body.account_number,
-    default_for_currency: req.body.default_account
+    default_for_currency: "Yes"
   }
 });
 
