@@ -365,8 +365,7 @@ app.post('/update-individual-account', async (req,res) => {
         state: req.body.state,
       },
       email: req.body.email,
-      phone: req.body.phone,
-      id_number: req.body.ssn
+      phone: req.body.phone
     }
   }
 );
@@ -392,7 +391,6 @@ app.post('/update-business-account', async (req, res) => {
       executives_provided: false,
       owners_provided: true,
       phone: req.body.company_phone,
-      tax_id: req.body.company_tax_id,
     }
   }
 );
