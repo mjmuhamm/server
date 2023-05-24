@@ -113,7 +113,7 @@ app.post('/create-business-account', async (req,res) => {
   business_type: 'company',
   business_profile: {
     mcc: req.body.mcc,
-    url: req.body.business_url
+    url: req.body.url
   },
   company: {
     name: req.body.company_name,
@@ -532,7 +532,7 @@ app.post('/create-payment-intent', async (req, res) => {
     paymentId: paymentIntent.id,
     publishableKey: 'pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo'
   });
-  
+
 
 // pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
 // pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
