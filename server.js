@@ -222,6 +222,7 @@ app.post('/create-person', async (req, res) => {
     all_good: "good",
     id: person.id
   });
+  console.log();
 
 });
 
