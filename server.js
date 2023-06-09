@@ -4,6 +4,16 @@ const stripe = require('stripe')('sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZ
 //sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ
 //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
 const express = require('express');
+const { initializeApp } = require('firebase-admin/app');
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("/Users/home/Desktop/Taïste, Inc/TaïsteServers/bloompayments/bloom-4e1f2-firebase-adminsdk-agp88-8c599ea0b3.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 const app = express();
 app.use(express.urlencoded());
 var bodyParser = require('body-parser');
@@ -538,6 +548,49 @@ app.post('/create-payment-intent', async (req, res) => {
 // pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
 // pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
 
+});
+
+// -------------------------------------------- //
+// Notifcations
+
+app.post('/subscribe-to-topic', async (req, res) => {
+const registrationTokens = [req.body.notificationToken1, req.body.notificationToken2]
+const topic = req.body.topic
+console.log("subscribe is happening");
+admin.messaging().subscribeToTopic(registrationTokens, topic)
+  .then((response) => {
+    console.log('Successfully subscribed to topic:', response);
+    res.json({
+      all_good: "good"
+    })
+  })
+  .catch((error) => {
+    console.log('Error subscribing to topic:', error);
+  });
+});
+
+app.post('/send-message', async (req, res) => {
+  
+  const message = {
+  notification: {
+    title: req.body.title,
+    body: req.body.notification
+  },
+  topic: req.body.topic
+};
+
+
+admin.messaging().send(message)
+  .then((response) => {
+    // Response is a message ID string.
+    console.log('Successfully sent message:', response);
+    res.json({
+      all_good: "good"
+    })
+  })
+  .catch((error) => {
+    console.log('Error sending message:', error);
+  });
 });
 
 const PORT = process.env.PORT || 4242
