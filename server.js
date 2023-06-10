@@ -8,7 +8,7 @@ const { initializeApp } = require('firebase-admin/app');
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require("/Users/home/Desktop/Taïste, Inc/TaïsteServers/bloompayments/bloom-4e1f2-firebase-adminsdk-agp88-8c599ea0b3.json");
+var serviceAccount = require("/bloompayments/bloom-4e1f2-firebase-adminsdk-agp88-8c599ea0b3.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -570,7 +570,7 @@ admin.messaging().subscribeToTopic(registrationTokens, topic)
 });
 
 app.post('/send-message', async (req, res) => {
-  
+
   const message = {
   notification: {
     title: req.body.title,
