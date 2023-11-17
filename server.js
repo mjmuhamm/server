@@ -67,7 +67,6 @@ app.post('/create-individual-account', async (req,res) => {
   type: 'custom',
   country: 'US',
   capabilities: {
-    card_payments: {requested: true},
     transfers: {requested: true},
   },
   business_type: 'individual',
@@ -99,17 +98,6 @@ app.post('/create-individual-account', async (req,res) => {
     phone: req.body.phone,
     id_number: req.body.ssn
   },
-  company: {
-    name: "APP INSIGHT, LLC",
-    address:  {
-      line1: "25 SE 2ND AVE",
-      line2: "STE 550 PMB 388",
-      postal_code: "33131",
-      city: "Miami",
-      state: "Florida"
-    },
-    tax_id: "92-3445924"
-  }
   
 
 });
