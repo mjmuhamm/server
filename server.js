@@ -99,7 +99,8 @@ app.post('/create-individual-account', async (req,res) => {
     phone: req.body.phone,
     id_number: req.body.ssn
   }
-
+  
+console.log(req.body);
 });
 
 const bankAccount = await stripe.accounts.createExternalAccount(
