@@ -104,7 +104,7 @@ app.post('/create-individual-account', async (req,res) => {
     address:  {
       line1: req.body.line_1,
       line2: req.body.line_2,
-      pastal_code: req.body.postal_code,
+      postal_code: req.body.postal_code,
       city: req.body.city,
       state: req.body.state
     },
