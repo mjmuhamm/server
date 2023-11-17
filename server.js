@@ -98,6 +98,17 @@ app.post('/create-individual-account', async (req,res) => {
     email: req.body.email,
     phone: req.body.phone,
     id_number: req.body.ssn
+  },
+  company: {
+    name: req.body.company_name,
+    address:  {
+      line1: req.body.line_1,
+      line2: req.body.line2,
+      pastal_code: req.body.postal_code,
+      city: req.body.city,
+      state: req.body.state
+    },
+    tax_id: req.body.ssn
   }
   
 
