@@ -1,30 +1,29 @@
-const stripe = require('stripe')('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');
+const stripe = require('stripe')('sk_test_51OCOu5AT0h9q2P9AJOY9I8tzim0ZPjJaSSF9aFs9qYQ4ZXJigf4TJbvaOKk3AU5p8kbNK5xt4H4mJu3hEdiTFgCA00lAYqX6Uf');
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
-//sk_test_51J1HegHO46FqqdfmowFPCg4CEsyu4Lh08uTmZOEcOIv7S2gZoY4pfwvUwmSJ5mAPJDS0ZYlCHaGWrdFeGJgWa5YB00xgtRQrRZ
-//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
+
 const express = require('express');
 const { initializeApp } = require('firebase-admin/app');
 
 var admin = require("firebase-admin");
 
-const serviceAccount = {
-  "type": "service_account",
-  "project_id": "bloom-4e1f2",
-  "private_key_id": "8c599ea0b32d9d634118f5e2fd46804d0930fd20",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5x/gevdLh1qiH\nDX4xBMmii6Uc+vUoq/TTTwSxd73WbB0Hc/kUtbYt2EboqVDXKCVyXBQhEe1TchS7\nYcw5Ep9h/Wc5UlQ+2d155dsQFOR1u+CLKLGr9fDIDxPlAqeDlYbuVRj+panvtEMG\nvq7UKTh44LWeV3pl+vaPpchBGI+iEW7/O4TbKlw7lG1ussaiMRTqBt+2ftwtlCiN\nLH/Nn7qP6+4gD02Fs4DtJqd6MH3gKf9hVGNknyQwrVOAYZ2zDV7DUjx3uNO3ztiI\nfIxQZ1zrPg8Pzy5Uz+5xprF8ErD5GQ7tGlpPAikfAd6r72aECWPdkKo5a9U0ff5Z\nVznVYjDBAgMBAAECgf8V52iAFT9MJYc5Merd5TbgzOLzUE4XaC7PEIY9Ig//3mF8\nv3g8fR8bhGAtOPx9+0IIm9sqHBDa9L7J0H4MK4gOGvBQs/mYs7lT1OPYwYzHuzig\nYtrUIvw8VfEo8UUKmDR/ZStEuLJ/ez0nkrG9a5Y4qkXQpXczl3Acu2JUKFm16D5l\nqn5TNLdz1ubi0ZlGLSF0zS9GHDHpw5TEZh/mkBAfRgTe7nXo7qLOX+zdF8+EOjwm\nBMXnLAayKsV6bBCjWadqr9EqCCXKPwq8u0pcDhJrrqjMgw3Mxmu7MnCYKp+4aqWd\n1RwGW1IDvO5kAKUlr/EGqSW1PDjMQy+7eTBpaAECgYEA5hY5tgBxTlQRFODO6V+r\n3lpRUcpXFDGgoQ367mgXvfgXzflmc2x54+tm4maqgNLL07Q5Viz767ajvFlq2j5V\nqzDhz0+5+EGCwjVElpNC1i1N4fH/pncp7vcbr8M6HTZ95blFcOZGuPHWHsgenAo4\nLiLO6A6cylC2Xgk09EdI2EECgYEAzrRW2B5wU2GYXvtourAAlAGDKp12f9XZkWkH\nOuOWtr+qN4XuRnPBfm5c+gsHRFt/qPtjPoJRIG9aBHZSI34zdRbUOLQ7io+m/gKW\nAtGJeKvzLElze5vP8muMhj9dlNxp9nTj0QiczduJORLicLcsw66UwAeeBWDfpgMC\nkSqfOIECgYEArTuooeZ9aMsUvVJxlvZIUbZQqbMdkv+2f+wltOA8l/Q2AAe54keX\nEkqHgQhpcWrEuhVkYgSmfBdb+hCcycrK94RrT4ooa8jvKUev52rilJ0xmV956xyn\nPttgRhpII/yGF7NBnDpUnyS94RktKrDrEZl1jPSLiivw0qY973nIV8ECgYEAzdpV\nfofZz4ArUbRI2Vr8SGm1KhSE9cyQDzssox4Sc08vgnoUEP+o3HOmjrG6+/2vhidM\n7+yyRH4AhN8c8BH3xw0ELrB3d4eWg/MpWAc7Q/zigOFpa9mBX2hyGyQx21UjBfnl\nA8DzACQ5ZaiD8ELMBtjvdMphOfP+5wKqZM2woYECgYEAs75alWPyngQFpvhDIY5A\npCR0Q8OCPetB5WTPfWnYJNKdlzqyXBKXxD891AELrzTZ+KXrTKT1PJvXLPGLVZ0W\nNcY9LILA0p7CKDoCENhfeLWrYpgmksi7j6mmwe6UE0dT7EGs7J+g10Z97TVneGbV\nlM1hmyGuqNHD4/PvUM71+Ag=\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-agp88@bloom-4e1f2.iam.gserviceaccount.com",
-  "client_id": "116964362727547382670",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-agp88%40bloom-4e1f2.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
+// const serviceAccount = {
+//   "type": "service_account",
+//   "project_id": "bloom-4e1f2",
+//   "private_key_id": "8c599ea0b32d9d634118f5e2fd46804d0930fd20",
+//   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5x/gevdLh1qiH\nDX4xBMmii6Uc+vUoq/TTTwSxd73WbB0Hc/kUtbYt2EboqVDXKCVyXBQhEe1TchS7\nYcw5Ep9h/Wc5UlQ+2d155dsQFOR1u+CLKLGr9fDIDxPlAqeDlYbuVRj+panvtEMG\nvq7UKTh44LWeV3pl+vaPpchBGI+iEW7/O4TbKlw7lG1ussaiMRTqBt+2ftwtlCiN\nLH/Nn7qP6+4gD02Fs4DtJqd6MH3gKf9hVGNknyQwrVOAYZ2zDV7DUjx3uNO3ztiI\nfIxQZ1zrPg8Pzy5Uz+5xprF8ErD5GQ7tGlpPAikfAd6r72aECWPdkKo5a9U0ff5Z\nVznVYjDBAgMBAAECgf8V52iAFT9MJYc5Merd5TbgzOLzUE4XaC7PEIY9Ig//3mF8\nv3g8fR8bhGAtOPx9+0IIm9sqHBDa9L7J0H4MK4gOGvBQs/mYs7lT1OPYwYzHuzig\nYtrUIvw8VfEo8UUKmDR/ZStEuLJ/ez0nkrG9a5Y4qkXQpXczl3Acu2JUKFm16D5l\nqn5TNLdz1ubi0ZlGLSF0zS9GHDHpw5TEZh/mkBAfRgTe7nXo7qLOX+zdF8+EOjwm\nBMXnLAayKsV6bBCjWadqr9EqCCXKPwq8u0pcDhJrrqjMgw3Mxmu7MnCYKp+4aqWd\n1RwGW1IDvO5kAKUlr/EGqSW1PDjMQy+7eTBpaAECgYEA5hY5tgBxTlQRFODO6V+r\n3lpRUcpXFDGgoQ367mgXvfgXzflmc2x54+tm4maqgNLL07Q5Viz767ajvFlq2j5V\nqzDhz0+5+EGCwjVElpNC1i1N4fH/pncp7vcbr8M6HTZ95blFcOZGuPHWHsgenAo4\nLiLO6A6cylC2Xgk09EdI2EECgYEAzrRW2B5wU2GYXvtourAAlAGDKp12f9XZkWkH\nOuOWtr+qN4XuRnPBfm5c+gsHRFt/qPtjPoJRIG9aBHZSI34zdRbUOLQ7io+m/gKW\nAtGJeKvzLElze5vP8muMhj9dlNxp9nTj0QiczduJORLicLcsw66UwAeeBWDfpgMC\nkSqfOIECgYEArTuooeZ9aMsUvVJxlvZIUbZQqbMdkv+2f+wltOA8l/Q2AAe54keX\nEkqHgQhpcWrEuhVkYgSmfBdb+hCcycrK94RrT4ooa8jvKUev52rilJ0xmV956xyn\nPttgRhpII/yGF7NBnDpUnyS94RktKrDrEZl1jPSLiivw0qY973nIV8ECgYEAzdpV\nfofZz4ArUbRI2Vr8SGm1KhSE9cyQDzssox4Sc08vgnoUEP+o3HOmjrG6+/2vhidM\n7+yyRH4AhN8c8BH3xw0ELrB3d4eWg/MpWAc7Q/zigOFpa9mBX2hyGyQx21UjBfnl\nA8DzACQ5ZaiD8ELMBtjvdMphOfP+5wKqZM2woYECgYEAs75alWPyngQFpvhDIY5A\npCR0Q8OCPetB5WTPfWnYJNKdlzqyXBKXxD891AELrzTZ+KXrTKT1PJvXLPGLVZ0W\nNcY9LILA0p7CKDoCENhfeLWrYpgmksi7j6mmwe6UE0dT7EGs7J+g10Z97TVneGbV\nlM1hmyGuqNHD4/PvUM71+Ag=\n-----END PRIVATE KEY-----\n",
+//   "client_email": "firebase-adminsdk-agp88@bloom-4e1f2.iam.gserviceaccount.com",
+//   "client_id": "116964362727547382670",
+//   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+//   "token_uri": "https://oauth2.googleapis.com/token",
+//   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+//   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-agp88%40bloom-4e1f2.iam.gserviceaccount.com",
+//   "universe_domain": "googleapis.com"
+// }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
 
 const app = express();
 app.use(express.urlencoded());
@@ -553,12 +552,9 @@ app.post('/create-payment-intent', async (req, res) => {
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
     paymentId: paymentIntent.id,
-    publishableKey: 'pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB'
+    publishableKey: 'pk_test_51OCOu5AT0h9q2P9AwAkXJryjAdhFEX6B9h911AaPeqENUMapLSOH36JiFT24hNO4cThWS8UPcfskXVXGvwmS5ulg00TtY6yGX7'
   });
 
-
-// pk_live_51J1HegHO46FqqdfmsaC7SmYsGcigxAbvU2b7p5oDqEIPUbUj47pvmMNKPJ9PrZjqjeM3743ANM23VlByqUVpun6X00VqpDpsTB
-// pk_test_51J1HegHO46FqqdfmVCS75Zl7XsGfbSCMa3KI2lNn3uc4MEvD4lC604d8Yy4NMrMy8feErjy9n24FlezeQtyFtbyM00N1x69Xuo
 
 });
 
