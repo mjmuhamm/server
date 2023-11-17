@@ -62,7 +62,7 @@ res.json({
 
 
 app.post('/create-individual-account', async (req,res) => {
-
+  console.log(req.body);
   const account = await stripe.accounts.create({
   type: 'custom',
   country: 'US',
@@ -100,7 +100,7 @@ app.post('/create-individual-account', async (req,res) => {
     id_number: req.body.ssn
   }
   
-console.log(req.body);
+
 });
 
 const bankAccount = await stripe.accounts.createExternalAccount(
